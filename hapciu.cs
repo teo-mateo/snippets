@@ -22,20 +22,15 @@ public static HttpResponseMessage Run(HttpRequestMessage req, TraceWriter log)
             .FirstOrDefault(q => string.Compare(q.Key, "ip", true) == 0)
             .Value;
         
-        if(ip == null)
+        if(ip == null || !CheckIP(ip))
         {
-            return req.CreateResponse(HttpStatusCode.BadRequest, "I don't know what to do."); 
+            //nothing to check or not found
+            return req.CreateResponse(HttpStatusCode.NotFound, "Not found."); 
         }
         else
         {
-            if(CheckIP(ip))
-            {
-                return req.CreateResponse(HttpStatusCode.Found, "Found.");
-            }
-            else
-            {
-                return req.CreateResponse(HttpStatusCode.NotFound, "Not found.");
-            }
+            //found
+            return req.CreateResponse(HttpStatusCode.Found, "Found.");
         }
             
     }
